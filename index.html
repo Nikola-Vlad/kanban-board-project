@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Kanban Board</title>
+</head>
+
+<body>
+    <main>
+        <div class="board-wrapper">
+            <section class="column" id="backlog">
+                <h2>Backlog <span class="count">4</span></h2>
+                <div class="card">
+                    <span class="tag">Undefined</span>
+                    <h3>Feed Research</h3>
+                    <p>Feed design is required for our new project.
+                        Let's research the best practices.
+                    </p>
+                </div>
+                <button class="add-card">+ New</button>
+            </section>
+
+            <section class="column" id="todo">
+                <h2>To Do <span class="count">2</span></h2>
+                <div class="card">
+                    <span class="tag">High</span>
+                    <h3>Create Dashboard Component</h3>
+                    <p>Create of calendar and feed components for dashboard design.</p>
+                </div>
+                <button class="add-card">+ New</button>
+            </section>
+
+            <section class="column" id="inprogress">
+                <h2>In Progress <span class="count">3</span></h2>
+                <div class="card">
+                    <span class="tag">Low</span>
+                    <h3>Add Kanban Design to Your Portfolio</h3>
+                    <p>Don't forget to design it nicely before adding it to your portfolio.</p>
+                </div>
+                <button class="add-card">+ New</button>
+            </section>
+
+            <section class="column" id="done">
+                <h2>Done <span class="count">3</span></h2>
+                <div class="card">
+                    <span class="tag">Low</span>
+                    <h3>Create Wireframe for Kanban</h3>
+                    <p>Kanban design is required for our new project. Let's research the best practices.</p>
+                </div>
+                <button class="add-card">+ New</button>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
