@@ -6,52 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Kanban Board</title>
 </head>
 
 <body>
     <main>
         <div class="board-wrapper">
+            <!-- BACKLOG COLUMN LAYOUT -->
             <section class="column" id="backlog">
-                <h2>Backlog <span class="count">4</span></h2>
-                <div class="card">
-                    <span class="tag">Undefined</span>
-                    <h3>Feed Research</h3>
-                    <p>Feed design is required for our new project.
-                        Let's research the best practices.
-                    </p>
+                <div class="column-header">
+                    <h2>Backlog <span class="count">4</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
                 </div>
-                <button class="add-card">+ New</button>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
             </section>
-
+                    <!-- TODO COLUMN LAYOUT -->
             <section class="column" id="todo">
-                <h2>To Do <span class="count">2</span></h2>
-                <div class="card">
-                    <span class="tag">High</span>
-                    <h3>Create Dashboard Component</h3>
-                    <p>Create of calendar and feed components for dashboard design.</p>
+                <div class="column-header">
+                    <h2>To Do <span class="count">2</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
                 </div>
-                <button class="add-card">+ New</button>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
             </section>
-
+            <!-- IN PROGRESS COLUMN LAYOUT -->
             <section class="column" id="inprogress">
-                <h2>In Progress <span class="count">3</span></h2>
-                <div class="card">
-                    <span class="tag">Low</span>
-                    <h3>Add Kanban Design to Your Portfolio</h3>
-                    <p>Don't forget to design it nicely before adding it to your portfolio.</p>
+                <div class="column-header">
+                    <h2>In Progress <span class="count">3</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
                 </div>
-                <button class="add-card">+ New</button>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
             </section>
-
+            <!-- DONE COLUMN LAYOUT -->
             <section class="column" id="done">
-                <h2>Done <span class="count">3</span></h2>
-                <div class="card">
-                    <span class="tag">Low</span>
-                    <h3>Create Wireframe for Kanban</h3>
-                    <p>Kanban design is required for our new project. Let's research the best practices.</p>
+                <div class="column-header">
+                    <h2>Done <span class="count">3</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
                 </div>
-                <button class="add-card">+ New</button>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
             </section>
         </div>
     </main>
