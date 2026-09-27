@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Kanban Board</title>
+</head>
+
+<body>
+    <main>
+        <div class="board-wrapper">
+            <!-- BACKLOG COLUMN LAYOUT -->
+            <section class="column" id="backlog">
+                <div class="column-header">
+                    <h2>Backlog <span class="count">4</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
+                </div>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
+            </section>
+                    <!-- TODO COLUMN LAYOUT -->
+            <section class="column" id="todo">
+                <div class="column-header">
+                    <h2>To Do <span class="count">2</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
+                </div>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
+            </section>
+            <!-- IN PROGRESS COLUMN LAYOUT -->
+            <section class="column" id="inprogress">
+                <div class="column-header">
+                    <h2>In Progress <span class="count">3</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
+                </div>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
+            </section>
+            <!-- DONE COLUMN LAYOUT -->
+            <section class="column" id="done">
+                <div class="column-header">
+                    <h2>Done <span class="count">3</span></h2>
+                    <div class="action-buttons">
+                        <button class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    </div>
+                </div>
+                <button class="add-card"><i class="fa-solid fa-plus"></i> New</button>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
