@@ -1,4 +1,4 @@
-const tasks = [
+let tasks = [
     {
         id: 1,
         column: 'backlog',
@@ -116,8 +116,9 @@ function createCard(task) {
     const tag = document.createElement('span');
     const title = document.createElement('h3');
     const paragraph = document.createElement('p');
-
     const columnType = document.getElementById(task.column);
+    const deleteButton = document.createElement('button');
+    const deleteBtnIcon = document.createElement('i');
 
     tag.textContent = task.priority;
     tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`)
@@ -128,6 +129,9 @@ function createCard(task) {
     cardDue.classList.add('card-due');
     cardTimeInfo.appendChild(clockIcon);
     const addButton = columnType.querySelector('.add-card');
+    deleteButton.classList.add('delete-btn')
+    deleteBtnIcon.classList.add('fa-solid', 'fa-trash')
+    
     
     // DATE RELATED CODE!
     const currentDate = new Date();
@@ -158,13 +162,19 @@ function createCard(task) {
     card.classList.add('card');
     columnType.appendChild(card);
     columnType.appendChild(addButton);
-}
+    card.appendChild(deleteButton)
+    deleteButton.appendChild(deleteBtnIcon)
 
+    deleteButton.addEventListener('click', () => {
+        tasks = tasks.filter(t => t.id !== task.id)
+        card.remove()
+        
+    })
+}
 tasks.forEach(createCard);
 
 const addCardButtons = document.querySelectorAll('.add-card');
 const form = document.querySelector('form');
-
 let selectedColumn;
 
 addCardButtons.forEach(button => {

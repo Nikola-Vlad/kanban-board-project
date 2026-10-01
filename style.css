@@ -62,7 +62,8 @@ main {
     gap: 8px;
 }
 
-.top-add-btn {
+.top-add-btn,
+.top-menu-btn {
     border: none;
     color: #666;
     cursor: pointer;
@@ -70,7 +71,8 @@ main {
     padding: 4px;
 }
 
-.top-add-btn:hover {
+.top-add-btn:hover,
+.top-menu-btn:hover {
     color: #6c5ce7;
 }
 
@@ -223,4 +225,17 @@ form button {
 
 form button:hover {
     background-color: #5a4bd1;
+}
+
+.delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #787777;
+    font-size: 12px;
+    align-self: flex-end;
+}
+
+.delete-btn:hover {
+    color:#6c5ce7 ;   
 }
