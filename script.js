@@ -183,7 +183,16 @@ form.addEventListener('submit', (e) => {
     const priority = formData.get('priority');
     const dueDate = formData.get('dueDate');
 
+    if(!dueDate) {
+        window.alert('Date field is required!')
+        return;
+    }
+    
+    const taskIds = tasks.map(task => task.id);
+    let newId = Math.max(...taskIds) + 1;
+
     const newTask = {
+        id: newId,
         title,
         description,
         priority,
@@ -191,5 +200,10 @@ form.addEventListener('submit', (e) => {
         column: selectedColumn
     }
 
+    tasks.push(newTask);
+
     createCard(newTask);
+    console.log(newTask)
+    form.reset();
+    form.classList.add('hidden');
 })
