@@ -171,6 +171,21 @@ form {
     flex-direction: column;
     gap: 10px;
     width: 300px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+form label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #232222;
 }
 
 form input,
@@ -178,13 +193,34 @@ form textarea,
 form select {
     padding: 8px;
     font-family: inherit;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+    border-color: #6c5ce7;
+    outline: none;
 }
 
 form textarea {
     resize: vertical;
+    min-height: 80px;
 }
 
 form button {
     padding: 8px;
     cursor: pointer;
+    background-color: #6c5ce7;
+    color: white;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 6px;
+    border: none;
+}
+
+form button:hover {
+    background-color: #5a4bd1;
 }
