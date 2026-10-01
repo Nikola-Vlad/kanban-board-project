@@ -121,7 +121,7 @@ function createCard(task) {
     const deleteBtnIcon = document.createElement('i');
 
     tag.textContent = task.priority;
-    tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`)
+    tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
     title.textContent = task.title;
     paragraph.textContent = task.description;
     clockIcon.classList.add('fa-regular', 'fa-clock');
@@ -132,11 +132,10 @@ function createCard(task) {
     deleteButton.classList.add('delete-btn')
     deleteBtnIcon.classList.add('fa-solid', 'fa-trash')
     
-    
     // DATE RELATED CODE!
     const currentDate = new Date();
-    const taskDate = new Date(task.dueDate)
-    const expectedDueDate = taskDate - currentDate
+    const taskDate = new Date(task.dueDate);
+    const expectedDueDate = taskDate - currentDate;
     const dailyMilisec = 1000 * 60 * 60 * 24;
     const finalDueDate = Math.ceil(expectedDueDate / dailyMilisec);
     let daysLabel;
@@ -146,9 +145,9 @@ function createCard(task) {
     } else if (finalDueDate === 0) {
         daysLabel = `Due today`;
     } else if (finalDueDate === 1) {
-        daysLabel = 'Due in 1 day'
+        daysLabel = 'Due in 1 day';
     } else {
-        daysLabel = `${finalDueDate} days`
+        daysLabel = `${finalDueDate} days`;
     }
     const daysText = document.createTextNode(daysLabel);
     cardTimeInfo.appendChild(daysText);
@@ -162,16 +161,30 @@ function createCard(task) {
     card.classList.add('card');
     columnType.appendChild(card);
     columnType.appendChild(addButton);
-    card.appendChild(deleteButton)
-    deleteButton.appendChild(deleteBtnIcon)
+    card.appendChild(deleteButton);
+    deleteButton.appendChild(deleteBtnIcon);
 
     deleteButton.addEventListener('click', () => {
         tasks = tasks.filter(t => t.id !== task.id)
-        card.remove()
-        
+        card.remove();
+        updateCounts();
     })
 }
 tasks.forEach(createCard);
+
+const taskCount = document.querySelector('.count');
+
+function updateCounts () {
+    const columns = document.querySelectorAll('.column');
+
+    columns.forEach(c => {
+        const cardCount = c.querySelectorAll('.card').length;
+        const span = c.querySelector('.count');
+        span.textContent = cardCount;
+    })
+}
+
+updateCounts();
 
 const addCardButtons = document.querySelectorAll('.add-card');
 const form = document.querySelector('form');
@@ -180,7 +193,7 @@ let selectedColumn;
 addCardButtons.forEach(button => {
     button.addEventListener('click', () => {
         selectedColumn = button.closest('.column').id;
-        form.classList.remove('hidden')
+        form.classList.remove('hidden');
     })
 })
 
@@ -211,9 +224,11 @@ form.addEventListener('submit', (e) => {
     }
 
     tasks.push(newTask);
-
     createCard(newTask);
-    console.log(newTask)
     form.reset();
     form.classList.add('hidden');
+    updateCounts();
 })
+
+
+
