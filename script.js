@@ -108,7 +108,7 @@ let tasks = [
     }
 ]
 
-function createCard(task) {
+const generateCardTemplate = () =>  { 
     const card = document.createElement('div');
     const cardDue = document.createElement('div');
     const cardTimeInfo = document.createElement('span');
@@ -116,27 +116,62 @@ function createCard(task) {
     const tag = document.createElement('span');
     const title = document.createElement('h3');
     const paragraph = document.createElement('p');
-    const columnType = document.getElementById(task.column);
     const deleteButton = document.createElement('button');
     const deleteBtnIcon = document.createElement('i');
 
-    tag.textContent = task.priority;
-    tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`)
-    title.textContent = task.title;
-    paragraph.textContent = task.description;
     clockIcon.classList.add('fa-regular', 'fa-clock');
     cardTimeInfo.classList.add('card-time-info');
     cardDue.classList.add('card-due');
+    deleteButton.classList.add('delete-btn');
+    deleteBtnIcon.classList.add('fa-solid', 'fa-trash');
+    card.classList.add('card');
+
     cardTimeInfo.appendChild(clockIcon);
-    const addButton = columnType.querySelector('.add-card');
-    deleteButton.classList.add('delete-btn')
-    deleteBtnIcon.classList.add('fa-solid', 'fa-trash')
+    cardDue.appendChild(tag);
+    cardDue.appendChild(cardTimeInfo);
+    card.appendChild(cardDue);
+    card.appendChild(title);
+    card.appendChild(paragraph);
+    card.appendChild(deleteButton);
+    deleteButton.appendChild(deleteBtnIcon);
+    return {
+        card,
+        cardDue,
+        cardTimeInfo,
+        clockIcon,
+        tag,
+        title,
+        paragraph,
+        deleteButton,
+        deleteBtnIcon,
+    };
+}
+
+function createCard(task) {
+    const {
+        card,
+        cardDue,
+        cardTimeInfo,
+        clockIcon,
+        tag,
+        title,
+        paragraph,
+        deleteButton,
+        deleteBtnIcon,
+    } = generateCardTemplate(); 
+    
+    const targetColumn = document.getElementById(task.column);
+
+    tag.textContent = task.priority;
+    title.textContent = task.title;
+    paragraph.textContent = task.description;
+    tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
     
     
     // DATE RELATED CODE!
     const currentDate = new Date();
     const taskDate = new Date(task.dueDate)
-    const expectedDueDate = taskDate - currentDate
+    const expectedDueDate = taskDate - currentDate;
     const dailyMilisec = 1000 * 60 * 60 * 24;
     const finalDueDate = Math.ceil(expectedDueDate / dailyMilisec);
     let daysLabel;
@@ -154,22 +189,13 @@ function createCard(task) {
     cardTimeInfo.appendChild(daysText);
     // DATE RELATED CODE!
     
-    cardDue.appendChild(tag);
-    cardDue.appendChild(cardTimeInfo);
-    card.appendChild(cardDue);
-    card.appendChild(title);
-    card.appendChild(paragraph);
-    card.classList.add('card');
-    columnType.appendChild(card);
-    columnType.appendChild(addButton);
-    card.appendChild(deleteButton)
-    deleteButton.appendChild(deleteBtnIcon)
+
+    targetColumn.insertBefore(card, targetColumn.children[targetColumn.children.length - 1]);
 
     deleteButton.addEventListener('click', () => {
         tasks = tasks.filter(t => t.id !== task.id)
         card.remove()
-        
-    })
+    });
 }
 tasks.forEach(createCard);
 
@@ -177,12 +203,10 @@ const addCardButtons = document.querySelectorAll('.add-card');
 const form = document.querySelector('form');
 let selectedColumn;
 
-addCardButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        selectedColumn = button.closest('.column').id;
-        form.classList.remove('hidden')
-    })
-})
+const requestNewTask = (columnType) => {
+    form.classList.remove('hidden');
+    selectedColumn = columnType;
+}
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -209,11 +233,9 @@ form.addEventListener('submit', (e) => {
         dueDate,
         column: selectedColumn
     }
-
     tasks.push(newTask);
 
     createCard(newTask);
-    console.log(newTask)
     form.reset();
     form.classList.add('hidden');
 })
