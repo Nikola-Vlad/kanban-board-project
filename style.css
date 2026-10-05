@@ -190,6 +190,23 @@ form label {
     color: #232222;
 }
 
+.top-header-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    padding-bottom: 8px;
+}
+
+.closeFormBtn {
+    padding: 3px 5px;
+    border-radius: 4px;
+    border: none;
+    background-color: #6c5ce7;
+    color: white;
+    cursor: pointer;
+}
+
 form input,
 form textarea,
 form select {
@@ -212,7 +229,7 @@ form textarea {
     min-height: 80px;
 }
 
-form button {
+form > .createBtn {
     padding: 8px;
     cursor: pointer;
     background-color: #6c5ce7;

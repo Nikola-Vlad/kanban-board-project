@@ -167,7 +167,6 @@ function createCard(task) {
     paragraph.textContent = task.description;
     tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
     
-    
     // DATE RELATED CODE!
     const currentDate = new Date();
     const taskDate = new Date(task.dueDate)
@@ -189,7 +188,6 @@ function createCard(task) {
     cardTimeInfo.appendChild(daysText);
     // DATE RELATED CODE!
     
-
     targetColumn.insertBefore(card, targetColumn.children[targetColumn.children.length - 1]);
 
     deleteButton.addEventListener('click', () => {
@@ -208,15 +206,19 @@ const requestNewTask = (columnType) => {
     selectedColumn = columnType;
 }
 
+const closeForm = () => {
+    form.classList.add('hidden');
+}
+
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-
+    
     const formData = new FormData(e.target)
     const title = formData.get('title');
     const description = formData.get('description');
     const priority = formData.get('priority');
     const dueDate = formData.get('dueDate');
-
+    
     if(!dueDate) {
         window.alert('Date field is required!')
         return;
@@ -224,7 +226,7 @@ form.addEventListener('submit', (e) => {
     
     const taskIds = tasks.map(task => task.id);
     let newId = Math.max(...taskIds) + 1;
-
+    
     const newTask = {
         id: newId,
         title,
@@ -234,7 +236,7 @@ form.addEventListener('submit', (e) => {
         column: selectedColumn
     }
     tasks.push(newTask);
-
+    
     createCard(newTask);
     form.reset();
     form.classList.add('hidden');
