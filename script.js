@@ -134,6 +134,7 @@ const generateCardTemplate = () =>  {
     card.appendChild(paragraph);
     card.appendChild(deleteButton);
     deleteButton.appendChild(deleteBtnIcon);
+
     return {
         card,
         cardDue,
@@ -147,29 +148,19 @@ const generateCardTemplate = () =>  {
     };
 }
 
-function createCard(task) {
-    const {
-        card,
-        cardDue,
-        cardTimeInfo,
-        clockIcon,
-        tag,
-        title,
-        paragraph,
-        deleteButton,
-        deleteBtnIcon,
-    } = generateCardTemplate(); 
-    
-    const targetColumn = document.getElementById(task.column);
+function addCardContent(task, cardTemplate) {
+    const daysText = document.createTextNode(formatDueDate(task.dueDate));
+    cardTemplate.tag.textContent = task.priority;
+    cardTemplate.title.textContent = task.title;
+    cardTemplate.paragraph.textContent = task.description;
+    cardTemplate.tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
+    cardTemplate.cardTimeInfo.appendChild(daysText);
 
-    tag.textContent = task.priority;
-    title.textContent = task.title;
-    paragraph.textContent = task.description;
-    tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
-    
-    // DATE RELATED CODE!
+}
+
+function formatDueDate (dueDate) {
     const currentDate = new Date();
-    const taskDate = new Date(task.dueDate)
+    const taskDate = new Date(dueDate);
     const expectedDueDate = taskDate - currentDate;
     const dailyMilisec = 1000 * 60 * 60 * 24;
     const finalDueDate = Math.ceil(expectedDueDate / dailyMilisec);
@@ -180,22 +171,31 @@ function createCard(task) {
     } else if (finalDueDate === 0) {
         daysLabel = `Due today`;
     } else if (finalDueDate === 1) {
-        daysLabel = 'Due in 1 day'
+        daysLabel = 'Due in 1 day';
     } else {
-        daysLabel = `${finalDueDate} days`
+        daysLabel = `${finalDueDate} days left`;
     }
-    const daysText = document.createTextNode(daysLabel);
-    cardTimeInfo.appendChild(daysText);
-    // DATE RELATED CODE!
     
-    targetColumn.insertBefore(card, targetColumn.children[targetColumn.children.length - 1]);
+    return daysLabel;
+}
 
-    deleteButton.addEventListener('click', () => {
+function createCard(task) {
+    
+    const template = generateCardTemplate();
+    
+    addCardContent(task, template);
+    
+    const targetColumn = document.getElementById(task.column);
+
+    targetColumn.insertBefore(template.card, targetColumn.children[targetColumn.children.length - 1]);
+
+    template.deleteButton.addEventListener('click', () => {
         tasks = tasks.filter(t => t.id !== task.id)
         card.remove()
     });
 }
-tasks.forEach(createCard);
+
+tasks.forEach((task) => createCard(task)); 
 
 const addCardButtons = document.querySelectorAll('.add-card');
 const form = document.querySelector('form');
