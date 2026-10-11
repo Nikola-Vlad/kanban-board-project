@@ -155,7 +155,6 @@ function addCardContent(task, cardTemplate) {
     cardTemplate.paragraph.textContent = task.description;
     cardTemplate.tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
     cardTemplate.cardTimeInfo.appendChild(daysText);
-
 }
 
 function formatDueDate (dueDate) {
@@ -179,20 +178,22 @@ function formatDueDate (dueDate) {
     return daysLabel;
 }
 
+function onDelete (task,template) {
+    template.deleteButton.addEventListener('click', () => {
+        tasks = tasks.filter(t => t.id !== task.id)
+        template.card.remove()
+    });
+}
+
 function createCard(task) {
-    
     const template = generateCardTemplate();
-    
     addCardContent(task, template);
     
     const targetColumn = document.getElementById(task.column);
 
     targetColumn.insertBefore(template.card, targetColumn.children[targetColumn.children.length - 1]);
 
-    template.deleteButton.addEventListener('click', () => {
-        tasks = tasks.filter(t => t.id !== task.id)
-        card.remove()
-    });
+    onDelete(task,template)
 }
 
 tasks.forEach((task) => createCard(task)); 
