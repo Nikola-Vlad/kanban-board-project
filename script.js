@@ -178,10 +178,18 @@ const formatDueDate = (dueDate) => {
     return daysLabel;
 }
 
+const updateCounts = () => {
+    document.querySelectorAll('.column').forEach((column) => {
+        const cardCount = column.querySelectorAll('.card').length;
+        column.querySelector('.count').textContent = cardCount;
+    });
+}
+
 const setOnDelete = (task, template) => {
     template.deleteButton.addEventListener('click', () => {
         tasks = tasks.filter(t => t.id !== task.id);
         template.card.remove();
+        updateCounts();
     });
 }
 
@@ -192,6 +200,7 @@ const createCard = (task) => {
 
     const targetColumn = document.getElementById(task.column);
     targetColumn.insertBefore(template.card, targetColumn.children[targetColumn.children.length - 1]);
+    updateCounts();
 }
 
 tasks.forEach((task) => createCard(task));
@@ -232,7 +241,7 @@ const handleSubmit = (e) => {
         dueDate,
         column: selectedColumn
     }
-
+    tasks.push(newTask);
     createCard(newTask);
     closeForm();
 }
