@@ -108,7 +108,7 @@ let tasks = [
     }
 ]
 
-const generateCardTemplate = () => {
+const generateCardTemplate = () =>  { 
     const card = document.createElement('div');
     const cardDue = document.createElement('div');
     const cardTimeInfo = document.createElement('span');
@@ -148,6 +148,56 @@ const generateCardTemplate = () => {
     };
 }
 
+function addCardContent(task, cardTemplate) {
+    const daysText = document.createTextNode(formatDueDate(task.dueDate));
+    cardTemplate.tag.textContent = task.priority;
+    cardTemplate.title.textContent = task.title;
+    cardTemplate.paragraph.textContent = task.description;
+    cardTemplate.tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
+    cardTemplate.cardTimeInfo.appendChild(daysText);
+}
+
+function formatDueDate (dueDate) {
+    const currentDate = new Date();
+    const taskDate = new Date(dueDate);
+    const expectedDueDate = taskDate - currentDate;
+    const dailyMilisec = 1000 * 60 * 60 * 24;
+    const finalDueDate = Math.ceil(expectedDueDate / dailyMilisec);
+    let daysLabel;
+    
+    if(finalDueDate < 0) {
+        daysLabel = 'Overdue';
+    } else if (finalDueDate === 0) {
+        daysLabel = `Due today`;
+    } else if (finalDueDate === 1) {
+        daysLabel = 'Due in 1 day';
+    } else {
+        daysLabel = `${finalDueDate} days left`;
+    }
+    
+    return daysLabel;
+}
+
+function onDelete (task,template) {
+    template.deleteButton.addEventListener('click', () => {
+        tasks = tasks.filter(t => t.id !== task.id)
+        template.card.remove()
+    });
+}
+
+function createCard(task) {
+    const template = generateCardTemplate();
+    addCardContent(task, template);
+    
+    const targetColumn = document.getElementById(task.column);
+
+    targetColumn.insertBefore(template.card, targetColumn.children[targetColumn.children.length - 1]);
+
+    onDelete(task,template)
+}
+
+tasks.forEach((task) => createCard(task)); 
+
 const addCardContent = (task, cardTemplate) => {
     const daysText = document.createTextNode(formatDueDate(task.dueDate));
     cardTemplate.tag.textContent = task.priority;
@@ -182,7 +232,7 @@ const setOnDelete = (task, template) => {
     template.deleteButton.addEventListener('click', () => {
         tasks = tasks.filter(t => t.id !== task.id);
         template.card.remove();
-    });
+    }); 
 }
 
 const createCard = (task) => {
@@ -215,15 +265,15 @@ const handleSubmit = (e) => {
     const description = formData.get('description');
     const priority = formData.get('priority');
     const dueDate = formData.get('dueDate');
-
-    if (!dueDate) {
-        window.alert('Date field is required!');
+    
+    if(!dueDate) {
+        window.alert('Date field is required!')
         return;
     }
 
     const taskIds = tasks.map(task => task.id);
     let newId = Math.max(...taskIds) + 1;
-
+    
     const newTask = {
         id: newId,
         title,
