@@ -108,7 +108,7 @@ let tasks = [
     }
 ]
 
-function createCard(task) {
+const generateCardTemplate = () => {
     const card = document.createElement('div');
     const cardDue = document.createElement('div');
     const cardTimeInfo = document.createElement('span');
@@ -116,101 +116,111 @@ function createCard(task) {
     const tag = document.createElement('span');
     const title = document.createElement('h3');
     const paragraph = document.createElement('p');
-    const columnType = document.getElementById(task.column);
     const deleteButton = document.createElement('button');
     const deleteBtnIcon = document.createElement('i');
 
-    tag.textContent = task.priority;
-    tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
-    title.textContent = task.title;
-    paragraph.textContent = task.description;
     clockIcon.classList.add('fa-regular', 'fa-clock');
     cardTimeInfo.classList.add('card-time-info');
     cardDue.classList.add('card-due');
+    deleteButton.classList.add('delete-btn');
+    deleteBtnIcon.classList.add('fa-solid', 'fa-trash');
+    card.classList.add('card');
+
     cardTimeInfo.appendChild(clockIcon);
-    const addButton = columnType.querySelector('.add-card');
-    deleteButton.classList.add('delete-btn')
-    deleteBtnIcon.classList.add('fa-solid', 'fa-trash')
-    
-    // DATE RELATED CODE!
+    cardDue.appendChild(tag);
+    cardDue.appendChild(cardTimeInfo);
+    card.appendChild(cardDue);
+    card.appendChild(title);
+    card.appendChild(paragraph);
+    card.appendChild(deleteButton);
+    deleteButton.appendChild(deleteBtnIcon);
+
+    return {
+        card,
+        cardDue,
+        cardTimeInfo,
+        clockIcon,
+        tag,
+        title,
+        paragraph,
+        deleteButton,
+        deleteBtnIcon,
+    };
+}
+
+const addCardContent = (task, cardTemplate) => {
+    const daysText = document.createTextNode(formatDueDate(task.dueDate));
+    cardTemplate.tag.textContent = task.priority;
+    cardTemplate.title.textContent = task.title;
+    cardTemplate.paragraph.textContent = task.description;
+    cardTemplate.tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
+    cardTemplate.cardTimeInfo.appendChild(daysText);
+}
+
+const formatDueDate = (dueDate) => {
     const currentDate = new Date();
-    const taskDate = new Date(task.dueDate);
+    const taskDate = new Date(dueDate);
     const expectedDueDate = taskDate - currentDate;
     const dailyMilisec = 1000 * 60 * 60 * 24;
     const finalDueDate = Math.ceil(expectedDueDate / dailyMilisec);
     let daysLabel;
-    
-    if(finalDueDate < 0) {
+
+    if (finalDueDate < 0) {
         daysLabel = 'Overdue';
     } else if (finalDueDate === 0) {
         daysLabel = `Due today`;
     } else if (finalDueDate === 1) {
         daysLabel = 'Due in 1 day';
     } else {
-        daysLabel = `${finalDueDate} days`;
+        daysLabel = `${finalDueDate} days left`;
     }
-    const daysText = document.createTextNode(daysLabel);
-    cardTimeInfo.appendChild(daysText);
-    // DATE RELATED CODE!
-    
-    cardDue.appendChild(tag);
-    cardDue.appendChild(cardTimeInfo);
-    card.appendChild(cardDue);
-    card.appendChild(title);
-    card.appendChild(paragraph);
-    card.classList.add('card');
-    columnType.appendChild(card);
-    columnType.appendChild(addButton);
-    card.appendChild(deleteButton);
-    deleteButton.appendChild(deleteBtnIcon);
 
-    deleteButton.addEventListener('click', () => {
-        tasks = tasks.filter(t => t.id !== task.id)
-        card.remove();
-        updateCounts();
-    })
-}
-tasks.forEach(createCard);
-
-const taskCount = document.querySelector('.count');
-
-function updateCounts () {
-    const columns = document.querySelectorAll('.column');
-
-    columns.forEach(c => {
-        const cardCount = c.querySelectorAll('.card').length;
-        const span = c.querySelector('.count');
-        span.textContent = cardCount;
-    })
+    return daysLabel;
 }
 
-updateCounts();
+const setOnDelete = (task, template) => {
+    template.deleteButton.addEventListener('click', () => {
+        tasks = tasks.filter(t => t.id !== task.id);
+        template.card.remove();
+    });
+}
 
-const addCardButtons = document.querySelectorAll('.add-card');
+const createCard = (task) => {
+    const template = generateCardTemplate();
+    addCardContent(task, template);
+    setOnDelete(task, template);
+
+    const targetColumn = document.getElementById(task.column);
+    targetColumn.insertBefore(template.card, targetColumn.children[targetColumn.children.length - 1]);
+}
+
+tasks.forEach((task) => createCard(task));
+
 const form = document.querySelector('form');
 let selectedColumn;
 
-addCardButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        selectedColumn = button.closest('.column').id;
-        form.classList.remove('hidden');
-    })
-})
+const requestNewTask = (columnType) => {
+    form.classList.remove('hidden');
+    selectedColumn = columnType;
+}
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
+const closeForm = () => {
+    form.reset();
+    form.classList.add('hidden');
+}
 
-    const formData = new FormData(e.target)
+const handleSubmit = (e) => {
+    const formData = new FormData(e.target);
     const title = formData.get('title');
     const description = formData.get('description');
     const priority = formData.get('priority');
     const dueDate = formData.get('dueDate');
 
-    if(!dueDate) {
-        window.alert('Date field is required!')
+    if (!dueDate) {
+        window.alert('Date field is required!');
         return;
     }
-    
+
     const taskIds = tasks.map(task => task.id);
     let newId = Math.max(...taskIds) + 1;
 
@@ -223,11 +233,13 @@ form.addEventListener('submit', (e) => {
         column: selectedColumn
     }
 
-    tasks.push(newTask);
     createCard(newTask);
-    form.reset();
-    form.classList.add('hidden');
-    updateCounts();
+    closeForm();
+}
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleSubmit(e);
 })
 
 
