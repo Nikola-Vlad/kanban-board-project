@@ -244,15 +244,28 @@ form button:hover {
     background-color: #5a4bd1;
 }
 
+.deleteEditWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
 .delete-btn {
     border: none;
     background: none;
     cursor: pointer;
     color: #787777;
     font-size: 12px;
-    align-self: flex-end;
 }
 
-.delete-btn:hover {
+.edit-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #787777;
+    font-size: 12px;
+}
+
+.delete-btn:hover,
+.edit-btn:hover {
     color:#6c5ce7 ;   
 }

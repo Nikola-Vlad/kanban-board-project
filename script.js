@@ -86,7 +86,7 @@ let tasks = [
         priority: 'High',
         title: 'Design System Research',
         description: 'Design decisions need to be taken for our new project.',
-        dueDate: '2026-10-25'
+        dueDate: '2026-10-14'
     },
 
     {
@@ -116,15 +116,21 @@ const generateCardTemplate = () => {
     const tag = document.createElement('span');
     const title = document.createElement('h3');
     const paragraph = document.createElement('p');
+    const deleteEditWrapper = document.createElement('div');
     const deleteButton = document.createElement('button');
     const deleteBtnIcon = document.createElement('i');
+    const editButton = document.createElement('button');
+    const editBtnIcon = document.createElement('i');
 
     clockIcon.classList.add('fa-regular', 'fa-clock');
     cardTimeInfo.classList.add('card-time-info');
     cardDue.classList.add('card-due');
     deleteButton.classList.add('delete-btn');
     deleteBtnIcon.classList.add('fa-solid', 'fa-trash');
+    editButton.classList.add('edit-btn');
+    editBtnIcon.classList.add('fa-solid', 'fa-pen-to-square');
     card.classList.add('card');
+    deleteEditWrapper.classList.add('deleteEditWrapper');
 
     cardTimeInfo.appendChild(clockIcon);
     cardDue.appendChild(tag);
@@ -133,7 +139,12 @@ const generateCardTemplate = () => {
     card.appendChild(title);
     card.appendChild(paragraph);
     card.appendChild(deleteButton);
+    card.appendChild(editButton);
+    card.appendChild(deleteEditWrapper);
     deleteButton.appendChild(deleteBtnIcon);
+    editButton.appendChild(editBtnIcon);
+    deleteEditWrapper.appendChild(editButton);
+    deleteEditWrapper.appendChild(deleteButton);
 
     return {
         card,
@@ -145,16 +156,17 @@ const generateCardTemplate = () => {
         paragraph,
         deleteButton,
         deleteBtnIcon,
+        editButton,
+        editBtnIcon
     };
 }
 
 const addCardContent = (task, cardTemplate) => {
-    const daysText = document.createTextNode(formatDueDate(task.dueDate));
     cardTemplate.tag.textContent = task.priority;
     cardTemplate.title.textContent = task.title;
     cardTemplate.paragraph.textContent = task.description;
     cardTemplate.tag.classList.add('tag', `tag-${task.priority.toLowerCase()}`);
-    cardTemplate.cardTimeInfo.appendChild(daysText);
+    cardTemplate.cardTimeInfo.textContent = formatDueDate(task.dueDate);
 }
 
 const formatDueDate = (dueDate) => {
@@ -185,6 +197,29 @@ const updateCounts = () => {
     });
 }
 
+const editTask = (task, template) => {
+    template.editButton.addEventListener('click', () => {
+        form.classList.remove('hidden');
+        const title = task.title;
+        const description = task.description;
+        const priority = task.priority;
+        const dueDate = task.dueDate;
+
+        const titleInput = document.getElementById('title');
+        const descriptionInput = document.getElementById('description');
+        const priorityInput = document.getElementById('priority');
+        const dueDateInput = document.getElementById('dueDate');
+
+        titleInput.value = title;
+        descriptionInput.value = description;
+        priorityInput.value = priority;
+        dueDateInput.value = dueDate;
+
+        editingTaskId = task.id;
+        currentEditCard = template;
+    })
+}
+
 const setOnDelete = (task, template) => {
     template.deleteButton.addEventListener('click', () => {
         tasks = tasks.filter(t => t.id !== task.id);
@@ -197,16 +232,18 @@ const createCard = (task) => {
     const template = generateCardTemplate();
     addCardContent(task, template);
     setOnDelete(task, template);
+    editTask(task, template);
 
     const targetColumn = document.getElementById(task.column);
     targetColumn.insertBefore(template.card, targetColumn.children[targetColumn.children.length - 1]);
     updateCounts();
 }
-
 tasks.forEach((task) => createCard(task));
 
 const form = document.querySelector('form');
 let selectedColumn;
+let editingTaskId = null;
+let currentEditCard = null;
 
 const requestNewTask = (columnType) => {
     form.classList.remove('hidden');
@@ -218,7 +255,7 @@ const closeForm = () => {
     form.classList.add('hidden');
 }
 
-const handleSubmit = (e) => {
+const formSubmitHandler = (e) => {
     const formData = new FormData(e.target);
     const title = formData.get('title');
     const description = formData.get('description');
@@ -230,25 +267,38 @@ const handleSubmit = (e) => {
         return;
     }
 
-    const taskIds = tasks.map(task => task.id);
-    let newId = Math.max(...taskIds) + 1;
+    if (editingTaskId !== null) {
+        const specificTask = tasks.find(task => task.id === editingTaskId);
+        console.log(specificTask);
 
-    const newTask = {
-        id: newId,
-        title,
-        description,
-        priority,
-        dueDate,
-        column: selectedColumn
+        specificTask.title = title;
+        specificTask.description = description;
+        specificTask.priority = priority;
+        specificTask.dueDate = dueDate;
+
+        addCardContent(specificTask, currentEditCard);
+
+    } else {
+        const taskIds = tasks.map(task => task.id);
+        let newId = Math.max(...taskIds) + 1;
+
+        const newTask = {
+            id: newId,
+            title,
+            description,
+            priority,
+            dueDate,
+            column: selectedColumn
+        }
+        tasks.push(newTask);
+        createCard(newTask);
     }
-    tasks.push(newTask);
-    createCard(newTask);
     closeForm();
 }
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    handleSubmit(e);
+    formSubmitHandler(e);
 })
 
 
